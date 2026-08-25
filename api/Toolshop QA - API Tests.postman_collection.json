@@ -9,110 +9,401 @@
   "item": [
     {
       "name": "API-01 - Get All Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains a product data array\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.have.property(\"data\");\r\n    pm.expect(json.data).to.be.an(\"array\");\r\n    pm.expect(json.data.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"Products contain required fields\", function () {\r\n    const products = pm.response.json().data;\r\n\r\n    products.slice(0, 3).forEach(product => {\r\n        pm.expect(product).to.have.property(\"id\");\r\n        pm.expect(product).to.have.property(\"name\");\r\n        pm.expect(product).to.have.property(\"price\");\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/products",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "products"
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-02 - Filter Products by Category",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains products\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.have.property(\"data\");\r\n    pm.expect(json.data).to.be.an(\"array\");\r\n    pm.expect(json.data.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"All returned products belong to category 7\", function () {\r\n    const products = pm.response.json().data;\r\n\r\n    products.forEach(product => {\r\n        pm.expect(product.category.id).to.eql(7);\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/products?by_category=7",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "by_category",
+              "value": "7"
+            }
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-03 - Sort Products by Price",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains products\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.data).to.be.an(\"array\");\r\n    pm.expect(json.data.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"Products are sorted by price ascending\", function () {\r\n    const products = pm.response.json().data;\r\n    const prices = products.map(product => Number(product.price));\r\n\r\n    for (let i = 1; i < prices.length; i++) {\r\n        pm.expect(prices[i]).to.be.at.least(prices[i - 1]);\r\n    }\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/products?sort=price,asc",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "sort",
+              "value": "price,asc"
+            }
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-04 - Get Specific Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is a product object\", function () {\r\n    const product = pm.response.json();\r\n\r\n    pm.expect(product).to.be.an(\"object\");\r\n    pm.expect(product).to.have.property(\"id\");\r\n    pm.expect(product).to.have.property(\"name\");\r\n    pm.expect(product).to.have.property(\"price\");\r\n});\r\n\r\npm.test(\"Returned product ID matches requested ID\", function () {\r\n    const product = pm.response.json();\r\n\r\n    pm.expect(product.id).to.eql(9);\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/products/9",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "products",
+            "9"
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-05 - Get Non-Existent Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Response contains not-found message\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.have.property(\"message\");\r\n    pm.expect(json.message).to.include(\"not found\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/products/999999",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "products",
+            "999999"
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-06 - Search Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Search response contains results\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.have.property(\"data\");\r\n    pm.expect(json.data).to.be.an(\"array\");\r\n    pm.expect(json.data.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"Returned products match the search term\", function () {\r\n    const products = pm.response.json().data;\r\n    const query = \"thor\";\r\n\r\n    products.forEach(product => {\r\n        pm.expect(product.name.toLowerCase()).to.include(query);\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/products/search?q=Thor",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "products",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "Thor"
+            }
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-07 - Get Categories",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains categories\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.be.an(\"array\");\r\n    pm.expect(json.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"Categories contain required fields\", function () {\r\n    const categories = pm.response.json();\r\n\r\n    categories.slice(0, 5).forEach(category => {\r\n        pm.expect(category).to.have.property(\"id\");\r\n        pm.expect(category).to.have.property(\"name\");\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/categories",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "categories"
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-08 - Get Brands",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains brands\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.be.an(\"array\");\r\n    pm.expect(json.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"Brands contain required fields\", function () {\r\n    const brands = pm.response.json();\r\n\r\n    brands.slice(0, 5).forEach(brand => {\r\n        pm.expect(brand).to.have.property(\"id\");\r\n        pm.expect(brand).to.have.property(\"name\");\r\n    });\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/brands",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "brands"
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-09 - Login with Valid Credentials Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains access token\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.have.property(\"access_token\");\r\n    pm.expect(json.access_token).to.be.a(\"string\");\r\n    pm.expect(json.access_token.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"Token response contains required fields\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.have.property(\"token_type\");\r\n    pm.expect(json).to.have.property(\"expires_in\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
-        "method": "GET",
+        "method": "POST",
         "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"customer@practicesoftwaretesting.com\",\r\n  \"password\": \"welcome01\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/users/login",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "users",
+            "login"
+          ]
         }
       },
       "response": []
     },
     {
       "name": "API-10 - Login with Invalid Credentials",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 401\", function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"Response contains an authentication error\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json).to.have.property(\"error\");\r\n    pm.expect(json.error).to.eql(\"Unauthorized\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableCookies": false,
+        "followRedirects": true,
+        "strictSSL": false
+      },
       "request": {
-        "method": "GET",
+        "method": "POST",
         "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"customer@practicesoftwaretesting.com\",\r\n  \"password\": \"definitely-wrong-password\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
-          "raw": ""
+          "raw": "https://api-with-bugs.practicesoftwaretesting.com/users/login",
+          "protocol": "https",
+          "host": [
+            "api-with-bugs",
+            "practicesoftwaretesting",
+            "com"
+          ],
+          "path": [
+            "users",
+            "login"
+          ]
         }
       },
       "response": []
